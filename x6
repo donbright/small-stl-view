@@ -1,0 +1,58 @@
+tm=t;
+t1=[[1,0],[15,3],[0,4]];
+sp=1;
+t2=[[8,3],[C(tm/sp)*19,S(tm/sp)*12],[3+C(tm/3/sp)*6,-S(tm/sp)*6]];
+t3=[[8,3],[C(tm/sp)*19,S(tm/sp)*12],[20,10]];
+c.width=800;
+
+function sign(a){if (a==0) {return 0;};if (a>0) {return 1;} else {
+return -1;}}
+function mul( v, k) { return [ v[0]*k, v[1]*k ]; }
+function sub( p1, p2 ) { return [ p2[0]-p1[0], p2[1]-p1[1] ] ; }
+function add( p1, p2 ) { return [ p2[0]+p1[0], p2[1]+p1[1] ] ; }
+function isect( p1, p2, p3 ) {
+  return -wedge(p3,p2)/(wedge(p2,p1)+wedge(p1,p3));
+}
+function wedge( p1,p2 ){  return p1[0]*p2[1]-p1[1]*p2[0];}
+function tx(p) { return 250+19*p[0]; }
+function ty(p) { return 250-19*p[1]; }
+
+function dv( p1, p2, k ) {
+ x.beginPath();x.moveTo(tx(p1),ty(p1));
+ dp = sub(p1, p2);
+ x.strokeStyle="black";x.lineWidth=3;x.setLineDash([0,0]);
+ x.lineTo(tx(add(p1,mul(dp,k))),ty(add(p1,mul(dp,k))));
+ x.stroke();
+ x.closePath();}
+
+function dtri(t1,ts) {
+ for (j=0;j<3;j++) {
+  k=[[],[1,1,1],[1,1,1]];
+  isin = false;
+  for (te=0;te<ts.length;te++) {
+  for (q=1;q<=2;q++){ ds=[[],[],[],[],[],[]];
+   for (i=0;i<3;i++) {
+    ds[i][3] = sub(t1[(j+q)%3],    t1[j]);
+    ds[i][4] = sub(ts[te][i],      t1[j]);
+    ds[i][5] = sub(ts[te][(i+1)%3],t1[j]);
+    ds[i][0] = sub(ts[te][i],      ts[te][(i+1)%3]);
+    ds[i][1] = sub(ts[te][i],      t1[j]);
+    ds[i][2] = sub(ts[te][i],      t1[(j+q)%3]);
+    for (m=0;m<4;m+=3)k[q][m%2]=isect(ds[i][m],ds[i][m+1],ds[i][m+2]);
+    if (k[q][0]>0&&k[q][0]<1&&k[q][1]>0&&k[q][1]<1){
+        k[q][2]=Math.min(k[q][2],k[q][1]);}
+   }
+   s1=sign(wedge(ds[0][4],ds[0][0]));
+   s2=sign(wedge(ds[0][5],ds[1][0]));
+   s3=sign(wedge(ds[1][5],ds[2][0]));
+   isin=isin || (s1==s2&&s2==s3);
+  } // q
+  } // te
+  if (!isin) { dv(t1[j%3],t1[(j+1)%3],k[1][2]);}
+  if (!isin) { dv(t1[j%3],t1[(j+2)%3],k[2][2]);}
+  for (tr=0;tr<ts.length;tr++) { dv(ts[tr][j%3],ts[tr][(j+1)%3],1); } 
+ } // j
+} // func
+
+dtri(t1,[t2,t3]);
+

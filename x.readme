@@ -1,0 +1,7 @@
+these are codes to clip one triangle against another
+
+it works for simple triangles, and convex polygons
+
+but not concave. 
+
+

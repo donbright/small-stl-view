@@ -301,6 +301,15 @@ void draw_triangle2d(
 	lineto( fix_to_int(t2d.points[0].x), fix_to_int(t2d.points[0].y) );
 }
 
+
+void clip_triangle2d(
+	triangle2d &knife,
+	triangle2d &tofu
+)
+{
+	
+}
+
 /* Convert ascii decimal string to fixed point 32 bit signed integer.
  * 
  * http://cs.furman.edu/digitaldomain/more/ch6/dec_frac_to_bin.htm
